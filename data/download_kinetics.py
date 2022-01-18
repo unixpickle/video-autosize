@@ -30,9 +30,7 @@ def main():
             video_url = get_video_url(record["youtube_id"])
             if video_url is None:
                 continue
-            download_video(
-                video_url, record["time_start"], record["time_end"], out_path
-            )
+            download_video(video_url, record["time_start"], out_path)
 
 
 def get_video_url(youtube_id: str) -> Optional[str]:
@@ -53,7 +51,7 @@ def get_video_url(youtube_id: str) -> Optional[str]:
         return None
 
 
-def download_video(video_url: str, start: str, end: str, out_path: str):
+def download_video(video_url: str, start: str, out_path: str):
     try:
         subprocess.check_output(
             [
@@ -62,10 +60,10 @@ def download_video(video_url: str, start: str, end: str, out_path: str):
                 start,
                 "-i",
                 video_url,
-                "-c",
-                "copy",
-                "-to",
-                end,
+                "-ss",
+                "5",
+                "-t",
+                "5",
                 out_path,
             ]
         )
