@@ -66,9 +66,12 @@ class ScoreSizer(AutoSizer):
                 [num_frames, height, best_width, 3]
             )
             score = self.video_score(reshaped)
+            if height == 360:
+                print(height, score)
             if best_height is None or score > best_score:
                 best_height = height
                 best_score = score
+                print(best_score, height)
 
         if verbose_indent is not None:
             print(

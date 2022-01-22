@@ -1,4 +1,5 @@
 import io
+from email.quoprimime import header_check
 
 import numpy as np
 from PIL import Image
@@ -17,13 +18,16 @@ class JPEGSizer(ScoreSizer):
         self.quality = quality
 
     def video_score(self, vid: np.ndarray) -> float:
+        header_len = self._measure_image(vid[0, :1, :1])
         compressed_bytes = 0
         total_bytes = int(np.prod(vid.shape))
         for frame in vid:
-            img = Image.fromarray(frame)
-            buf = io.BytesIO()
-            img.save(buf, format="jpeg")
-            buf.seek(0)
-            compressed_bytes += len(buf.read())
-            del buf
+            compressed_bytes += self._measure_image(frame) - header_len
         return total_bytes / compressed_bytes
+
+    def _measure_image(self, arr: np.ndarray) -> int:
+        img = Image.fromarray(arr)
+        buf = io.BytesIO()
+        img.save(buf, format="jpeg", quality=self.quality)
+        buf.seek(0)
+        return len(buf.read())
