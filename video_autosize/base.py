@@ -103,5 +103,6 @@ class ScoreSizer(AutoSizer):
 
 
 def truncated_reshape(pixels: np.ndarray, width: int, height: int) -> np.ndarray:
+    pixels = pixels.reshape([-1, 3])
     num_frames = len(pixels) // (height * width)
     return pixels[: width * height * num_frames].reshape([num_frames, height, width, 3])
