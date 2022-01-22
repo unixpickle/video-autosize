@@ -44,8 +44,7 @@ class ScoreSizer(AutoSizer):
             height = min(len(pixels) // width, self.max_pixels // width)
             if height < self.min_height:
                 break
-            elif height > self.max_height:
-                continue
+            height = min(height, self.max_height)
             reshaped = pixels[: width * height].reshape([height, width, 3])
             score = self.image_score(reshaped)
             if best_width is None or score > best_score:
@@ -66,12 +65,9 @@ class ScoreSizer(AutoSizer):
                 [num_frames, height, best_width, 3]
             )
             score = self.video_score(reshaped)
-            if height == 360:
-                print(height, score)
             if best_height is None or score > best_score:
                 best_height = height
                 best_score = score
-                print(best_score, height)
 
         if verbose_indent is not None:
             print(
