@@ -1,10 +1,17 @@
 import io
-from email.quoprimime import header_check
+from typing import Dict
 
 import numpy as np
 from PIL import Image
 
 from .base import ScoreSizer
+
+
+def named_sizers() -> Dict[str, ScoreSizer]:
+    return {
+        "jpeg": JPEGSizer(),
+        "delta": DeltaSizer(),
+    }
 
 
 class JPEGSizer(ScoreSizer):
@@ -31,3 +38,46 @@ class JPEGSizer(ScoreSizer):
         img.save(buf, format="jpeg", quality=self.quality)
         buf.seek(0)
         return len(buf.read())
+
+
+class DeltaSizer(ScoreSizer):
+    def image_score(self, img: np.ndarray) -> float:
+        return -self._neighbor_diffs(img, 2)
+
+    def video_score(self, vid: np.ndarray) -> float:
+        return -self._neighbor_diffs(vid, 3)
+
+    def _neighbor_diffs(self, arr: np.ndarray, num_dims: int) -> float:
+        diff_count = np.zeros_like(arr)
+        diff_sum = np.zeros_like(arr)
+        for dim in range(num_dims):
+            prefix = (
+                ((slice(None),) * dim)
+                + (slice(None, -1),)
+                + (
+                    (
+                        slice(
+                            None,
+                        ),
+                    )
+                    * (num_dims - (dim + 1))
+                )
+            )
+            suffix = (
+                ((slice(None),) * dim)
+                + (slice(1, None),)
+                + (
+                    (
+                        slice(
+                            None,
+                        ),
+                    )
+                    * (num_dims - (dim + 1))
+                )
+            )
+            diff_count[prefix] += 1
+            diff_count[suffix] += 1
+            diff = (arr[prefix] - arr[suffix]) ** 2
+            diff_sum[prefix] += diff
+            diff_sum[suffix] += diff
+        return np.sum(diff_sum) / np.sum(diff_count)

@@ -4,20 +4,23 @@ import os
 import numpy as np
 from video_autosize.base import truncated_reshape
 from video_autosize.data import download_dataset
-from video_autosize.heuristic import JPEGSizer
+from video_autosize.heuristic import named_sizers
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--sizer", default="jpeg", type=str, help='options: "jpeg"')
+    parser.add_argument(
+        "--sizer",
+        default="jpeg",
+        type=str,
+        help=f"options: {','.join(named_sizers().keys())}",
+    )
     parser.add_argument("--use_frames", default=3.5, type=float)
     parser.add_argument("--video_npz_path", default=None, type=str)
     parser.add_argument("--output_npz_path", default=None, type=str)
     args = parser.parse_args()
 
-    sizer = {
-        "jpeg": JPEGSizer(),
-    }[args.sizer]
+    sizer = named_sizers()[args.sizer]
 
     if args.video_npz_path is None:
         print("downloading dataset and using default video...")

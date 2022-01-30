@@ -8,7 +8,7 @@ if something went wrong in the (local) search process.
 import argparse
 
 import numpy as np
-from video_autosize.heuristic import JPEGSizer
+from video_autosize.heuristic import named_sizers
 
 
 def main():
@@ -17,9 +17,7 @@ def main():
     parser.add_argument("video_npz_path", default=None, type=str)
     args = parser.parse_args()
 
-    sizer = {
-        "jpeg": JPEGSizer(),
-    }[args.sizer]
+    sizer = named_sizers()[args.sizer]
 
     loaded = np.load(args.video_npz_path)
     video = loaded["arr_0"]

@@ -22,11 +22,13 @@ class AutoSizer(ABC):
 class ScoreSizer(AutoSizer):
     def __init__(
         self,
+        min_width: int = 64,
         min_height: int = 64,
         max_width: int = 2048,
         max_height: int = 2048,
         max_pixels: int = 2048 ** 2,
     ):
+        self.min_width = min_width
         self.min_height = min_height
         self.max_width = max_width
         self.max_height = max_height
@@ -40,7 +42,7 @@ class ScoreSizer(AutoSizer):
         best_score = 0.0
         if verbose_indent is not None:
             print(f"{verbose_indent}inferring width...")
-        for width in range(1, self.max_width + 1):
+        for width in range(self.min_width, self.max_width + 1):
             height = min(len(pixels) // width, self.max_pixels // width)
             if height < self.min_height:
                 break
