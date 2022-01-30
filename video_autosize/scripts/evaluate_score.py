@@ -1,9 +1,13 @@
+"""
+Evaluate a sizer's score of a given video.
+
+This can be used to validate if the sizer truly prefers an incorrect shape or
+if something went wrong in the (local) search process.
+"""
+
 import argparse
-import os
 
 import numpy as np
-from video_autosize.base import truncated_reshape
-from video_autosize.data import download_dataset
 from video_autosize.heuristic import JPEGSizer
 
 
