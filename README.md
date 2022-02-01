@@ -2,7 +2,7 @@
 
 **The challenge:** I saw an [interesting challenge](https://twitter.com/matthen2/status/1483160741222006788?s=20) posed in a Tweet. In this challenge, you are streaming a video pixel-by-pixel, but do not know the dimensions (width and height) of the video. How do you figure out the width and height automatically?
 
-**Status:** I implemented two solution that were proposed on Twitter, finding that JPEG compression reliably detects the *width* but not the *height* of videos, while local derivatives can reliably detect both. I have grown bored with this project, but this repository includes a general enough evaluation tool that other algorithms could be implemented and tested in the future.
+**Status:** I implemented two solutions that were proposed on Twitter, finding that JPEG compression reliably detects the *width* but not the *height* of videos, while local derivatives can reliably detect both. I have grown bored with this project, but this repository includes a general enough evaluation tool that other algorithms could be implemented and tested in the future.
 
 # The ideal approach
 
